@@ -1,6 +1,6 @@
 class VideoController {
     getVideo (req, res){
-        return res.status(200).send({pathVideo:"OMG"})
+        return res.status(200).send({pathVideo:"Haaaaa"})
 }
 }
 
