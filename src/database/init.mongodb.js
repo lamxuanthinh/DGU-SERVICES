@@ -1,9 +1,9 @@
 'use strict'
 
 const {mongoose} = require('mongoose')
-const {db: { userName , password }} = require("../configs/config.mongodb")
+const {db: { name ,userName , password }} = require("../configs/config.mongodb")
 
-const connectString = `mongodb+srv://dgu:${password}@dgu.53hsntq.mongodb.net/`
+const connectString = `mongodb+srv://dgu:${password}@dgu.53hsntq.mongodb.net/${name}`
 
 console.log("Connection URL :", connectString)
 
