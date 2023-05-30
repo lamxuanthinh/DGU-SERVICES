@@ -5,7 +5,7 @@ const {Schema, model} = require("mongoose")
 const DOCUMENT_NAME = "Token"
 const COLLECTION_NAME = "Tokens"
 
-let tokenSchema = new Schema(
+const tokenSchema = new Schema(
     {
         userId: {
             type: Schema.Types.ObjectId,

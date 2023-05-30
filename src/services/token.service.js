@@ -3,7 +3,7 @@
 const TokenModel = require("../models/token.model")
 
 class Token {
-    static tokenStorage = async({userId, privateKey, publicKey}) => {
+     tokenStorage = async({userId, privateKey, publicKey}) => {
         try {
 
             const saveTokens = await TokenModel.create(
@@ -20,6 +20,4 @@ class Token {
     }
 }
 
-module.exports = Token
-
-module.exports = Token
+module.exports = new Token()

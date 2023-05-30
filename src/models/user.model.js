@@ -5,7 +5,7 @@ const {Schema, model} = require("mongoose")
 const DOCUMENT_NAME = "User"
 const COLLECTION_NAME = "Users"
 
-let userSchema = new Schema(
+const userSchema = new Schema(
     {
         email: {
             type: String,
