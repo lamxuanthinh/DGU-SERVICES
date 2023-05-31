@@ -5,9 +5,9 @@ const development = {
         port: process.env.DEV_APP_PORT || 3000,
     },
     db: {
-        name: process.env.DEV_DB_NAME || "",
+        name: process.env.DEV_DB_NAME || "DGU",
         userName : process.env.DEV_DB_USERNAME || "" ,
-        password: process.env.DEV_DB_PASSWORD || ""
+        password: process.env.DEV_DB_PASSWORD || "nevergiveupk21"
     }
 }
 
