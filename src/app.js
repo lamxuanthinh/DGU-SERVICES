@@ -20,6 +20,14 @@ require("./database/init.mongodb")
 // Initialize Routes
 app.use("/", require("./routes"))
 
+
 // Handing Error
+app.use((req,res, next) => {
+    return res.status(404).json(
+        {
+            message: "NOT FOUND"
+        }
+    )
+})
 
 module.exports = app
