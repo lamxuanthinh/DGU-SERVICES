@@ -4,7 +4,7 @@ const JWT = require("jsonwebtoken")
 const crypto = require("node:crypto");
 
 
-const createKeyPair = async () => {
+const createKeyPairMaster = async () => {
     try {
         const { publicKey, privateKey} = await crypto.generateKeyPairSync(
             "rsa",
@@ -35,7 +35,14 @@ const createTokenPair = async (payload, privateKey, publicKey) => {
     }
 }
 
+const createKeyPair =  () => {
+    const privateKey = crypto.randomBytes(64).toString();
+    const publicKey = crypto.randomBytes(64).toString();
+
+    return {privateKey, publicKey}
+}
+
 module.exports = {
     createKeyPair,
-    createTokenPair
+    createTokenPair,
 }
