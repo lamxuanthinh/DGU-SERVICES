@@ -18,7 +18,10 @@ class AccessService {
     signUp = async ({email, name, password}) => {
 
             const holderUser = await UserModel.findOne({email}).lean();
-            if (holderUser) { throw new BadResponseError("Error: User already exist") }
+            if (holderUser) { throw new BadResponseError("Error: Gmail already exist") }
+
+            const holderName = await  UserModel.findOne({name}).lean();
+            if (holderName) { throw new BadResponseError("Error: User Name already exist") }
 
             const hashPassword = await bcrypt.hash(password, 10);
             const createUser = await UserModel.create({
@@ -45,7 +48,7 @@ class AccessService {
                     publicKey
                 );
                 return {
-                    dataMeta:dataFilter({object: createUser, fields: ["_id", "email", "name"]}),
+                    dataMeta: dataFilter({object: createUser, fields: ["_id", "email", "name"]}),
                     tokens,
                 };
             }

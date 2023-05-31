@@ -8,7 +8,7 @@ class AccessController {
             console.log("[P]::SignUp::", req.body)
             new CREATE({
                 message: "SignIn Success !!!",
-                dataMeta: await AccessService.signUp(req.body)
+                data: await AccessService.signUp(req.body)
             }).send(res)
     }
 }
