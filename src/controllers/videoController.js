@@ -1,6 +1,5 @@
 const { OK } = require("../core/success.response");
 const VideoService = require("../services/video.service");
-require("dotenv").config();
 
 class VideoController {
     async getVideos(req, res) {
