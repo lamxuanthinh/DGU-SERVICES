@@ -1,6 +1,8 @@
 "use strict";
 const { Video, Hashtag, Author } = require("../models/video");
 require("dotenv").config();
+const fetch = require("node-fetch");
+
 class VideoService {
     getCloud() {}
     uploadVideo() {}
