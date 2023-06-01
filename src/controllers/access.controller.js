@@ -4,6 +4,16 @@ const AccessService = require("../services/access.service")
 const { CREATE, OK} = require("../core/success.response")
 
 class AccessController {
+
+    logout = async (req, res, next) => {
+        console.log("[P]::Logout::", req.keyStorage)
+        new OK({
+            message: "Logout Success !!!",
+            metaData: await AccessService.logout(req.keyStorage)
+        }).send(res)
+    }
+
+
     signUp  = async (req, res, next) => {
             console.log("[P]::SignUp::", req.body)
             new CREATE({

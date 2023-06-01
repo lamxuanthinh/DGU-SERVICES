@@ -1,7 +1,7 @@
 const app = require('./src/app')
+const {app: { port } } = require("./src/configs/config.mongodb")
 
-const PORT_NUMBER = 3005;
 
-const server = app.listen(PORT_NUMBER, () =>{
-    console.log(`WSV start on port ${PORT_NUMBER}`)
+const server = app.listen(port, () =>{
+    console.log(`WSV start on port ${port}`)
 })
