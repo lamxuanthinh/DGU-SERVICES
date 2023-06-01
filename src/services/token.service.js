@@ -14,6 +14,16 @@ class Token {
             return e
         }
     }
+
+     findOneByUserId = async (userId) => {
+         const holderToken = await TokenModel.findOne({userId}).select(["publicKey"]).lean();
+         return holderToken
+    }
+
+     removeTokenByUserId = async (_id) => {
+         const removeToken = await TokenModel.deleteOne({ _id })
+         return removeToken
+    }
 }
 
 module.exports = new Token()

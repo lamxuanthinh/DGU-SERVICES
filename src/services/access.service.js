@@ -15,6 +15,12 @@ const roleDGU = {
 };
 
 class AccessService {
+
+    logout = async ({ _id }) => {
+            const removeToken = await Token.removeTokenByUserId(_id.valueOf())
+            return removeToken
+    }
+
     signUp = async ({email, name, password}) => {
 
             const holderUser = await UserModel.findOne({email}).lean();
