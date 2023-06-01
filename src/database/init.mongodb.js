@@ -3,7 +3,7 @@
 const {mongoose} = require('mongoose')
 const {db: { name ,userName , password }} = require("../configs/config.mongodb")
 
-const connectString = `mongodb+srv://dgu:nevergiveupk21@dgu.53hsntq.mongodb.net/DGU`
+const connectString = `mongodb+srv://dgu:${password}@dgu.53hsntq.mongodb.net/${name}`
 
 console.log("Connection URL :", connectString)
 
