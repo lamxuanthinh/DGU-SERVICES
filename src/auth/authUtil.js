@@ -1,11 +1,13 @@
 "use strict"
 
 const JWT = require("jsonwebtoken")
-const crypto = require("node:crypto");
+
+const crypto = require("crypto");
 const {asyncHandler} = require("../middleware/handlerError.middleware");
 const {BadResponseError} = require("../core/error.response");
 // services
 const TokenServices = require("../services/token.service")
+
 
 
 const HEADER = {
