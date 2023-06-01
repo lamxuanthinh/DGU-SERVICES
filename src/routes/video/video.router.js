@@ -1,6 +1,7 @@
-const express =  require("express");
+const express = require("express");
 const router = express.Router();
 const videoController = require("../../controllers/videoController");
-router.get("/",videoController.getVideo);
+const { asyncHandler } = require("../../middleware/handlerError.middleware");
+router.get("/video", asyncHandler(videoController.getVideos));
 
 module.exports = router;

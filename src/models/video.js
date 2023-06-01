@@ -1,26 +1,22 @@
-function Video()
-{
-    this.author = null
+function Video() {
+    this.author = null;
 
-    this.video_id = null; 
+    this.video_id = null;
     this.title = null;
     this.caption = null;
-    this.course_id = null
+    this.course_id = null;
 
     this.sharers = [];
     this.hashtags = [];
     this.comments = [];
-    this.likers = []
-
+    this.likers = [];
 }
 
-function Hashtag(name)
-{
-    this.name = name
+function Hashtag(name) {
+    this.name = name;
 }
-function Author(pathAvatar)
-{
-    this.pathAvatar = pathAvatar
+function Author(pathAvatar) {
+    this.pathAvatar = pathAvatar;
 }
 
-module.exports = {Video, Hashtag, Author}
+module.exports = { Video, Hashtag, Author };
