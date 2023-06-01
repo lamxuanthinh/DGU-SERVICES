@@ -1,7 +1,7 @@
 "use strict"
 
 const JWT = require("jsonwebtoken")
-const crypto = require("node:crypto");
+const crypto = require("crypto");
 
 
 const createKeyPair = async () => {
