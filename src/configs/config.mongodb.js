@@ -18,7 +18,7 @@ const production = {
     db: {
         name: process.env.PRO_DB_NAME || "",
         userName : process.env.PRO_DB_USERNAME || "",
-        password: process.env.PRO_Db_PASSWORD || ""
+        password: process.env.PRO_DB_PASSWORD || ""
     }
 }
 
