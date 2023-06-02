@@ -16,7 +16,7 @@ class Token {
     }
 
      findOneByUserId = async (userId) => {
-         const holderToken = await TokenModel.findOne({userId}).select(["publicKey"]).lean();
+         const holderToken = await TokenModel.findOne({userId}).select(["userId","publicKey"]).lean();
          return holderToken
     }
 
