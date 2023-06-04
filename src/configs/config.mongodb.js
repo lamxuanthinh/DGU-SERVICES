@@ -3,6 +3,7 @@ require('dotenv').config()
 const development = {
     app: {
         port: process.env.DEV_APP_PORT || 3000,
+        clientUrl: process.env.CLIENT_URL_DEV || ""
     },
     db: {
         name: process.env.DEV_DB_NAME || "",
@@ -14,6 +15,7 @@ const development = {
 const production = {
     app: {
         port: process.env.PRO_APP_PORT || 3000,
+        clientUrl: process.env.CLIENT_URL_PRO || ""
     },
     db: {
         name: process.env.PRO_DB_NAME || "",
