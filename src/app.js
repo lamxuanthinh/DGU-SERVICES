@@ -2,9 +2,17 @@ const express = require('express')
 const morgan = require('morgan')
 const helmet = require('helmet')
 const compression = require('compression')
+const cors = require("cors")
 const app = express()
+const {app: { clientUrl }} = require("./configs/config.mongodb")
 
 // Initialize Middleware
+app.use(
+    cors({
+        origin: clientUrl,
+        methods: ["GET", "POST", "PUT", "DELETE"],
+    })
+);
 app.use(express.json())
 app.use(express.urlencoded({extended: true}))
 app.use(morgan('dev'))
