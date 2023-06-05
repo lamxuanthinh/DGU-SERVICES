@@ -3,11 +3,72 @@ const { Video, Hashtag, Author } = require("../models/video");
 require("dotenv").config();
 const fetch = require("node-fetch");
 const FormData = require('form-data');
+const Token = require("../configs/config.video");
+const request =  require("request")
 
 class VideoService {
-    getCloud() {}
-    uploadVideo() {}
-    addVideo() {}
+    async getDataCloud(titleVideo) {
+        const options = {
+            method:"PUT",
+            headers:
+            {
+                Authorization: `Apisecret ${Token.vdocypher_api_key}`,
+            }
+        } ;
+        const API_URL = new URL("https://www.vdocipher.com/api/videos")
+        API_URL.searchParams.set("title",titleVideo)
+        return await fetch(API_URL.href, options).then(res => res.json())
+    }
+
+    async uploadVideoCloud(dataCloud, fileVideo) {
+        console.log(fileVideo);
+        const stream = require("stream");
+        const bufferStream = stream.PassThrough()
+        fileVideo.originalname = Buffer.from(
+            fileVideo.originalname,
+            "latin1"
+          ).toString("utf8");
+        bufferStream.end(fileVideo.buffer)
+        const formData = FormData();
+        formData.append("policy",dataCloud['policy']);
+        formData.append("key",dataCloud['key']);
+        formData.append("x-amz-signature",dataCloud['x-amz-signature']);
+        formData.append("x-amz-algorithm",dataCloud['x-amz-algorithm']);
+        formData.append("x-amz-date",dataCloud['x-amz-date']);
+        formData.append("x-amz-credential",dataCloud['x-amz-credential']);
+        formData.append("success_action_status","201");
+        formData.append("success_action_redirect","");
+        formData.append("file", {
+            value: bufferStream,
+            options: { filename: fileVideo.originalname, contentType: null }
+        });
+        const formHeader = formData.getHeaders();
+
+        const options = {
+            method:"POST",
+            headers:{
+                ...formHeader
+            },
+            body: formData, 
+        } ;
+        const API_URL = new URL(dataCloud.uploadLink)
+        return await fetch(API_URL.href, options).then(res=>{
+            console.log(res.body);
+            return res.body;
+        })
+    }
+
+    async uploadVideo(reqBody) {
+        return await Promise.all(
+            reqBody.list_video.map(async (video) =>{
+                 return video;
+              })
+        )
+    }
+
+    addVideo() {
+
+    }
 
     async getPathVideoAPI(videoId) {
         const formData = new FormData();
@@ -16,7 +77,7 @@ class VideoService {
             headers: {
                 Accept: "application/json",
                 "Content-Type": "multipart/form-data",
-                Authorization: `Apisecret ${process.env.VDOCYPHER_API_KEY}`,
+                Authorization: `Apisecret ${Token.vdocypher_api_key}`,
             },
             body: formData,
         };
@@ -43,7 +104,7 @@ class VideoService {
         const options = {
             method: "GET",
             headers: {
-                Authorization: `Apisecret ${process.env.VDOCYPHER_API_KEY}`,
+                Authorization: `Apisecret ${Token.vdocypher_api_key}`,
             },
         };
         const strURL = "https://www.vdocipher.com/api/videos";

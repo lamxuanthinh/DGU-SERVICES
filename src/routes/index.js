@@ -5,7 +5,8 @@ const router = express.Router()
 
 
 router.use("/v1/api", require("./bootstrap/bootstrap.router") );
-router.use("/v1/api", require("./video/video.router") );
+router.use("/v1/api", require("./video/uploadVideos.router") );
+router.use("/v1/api", require("./video/getVideos.router") );
 router.use("/v1/api", require("./bootstrap/bootstrap.router") )
 router.use("/v1/api", require("./access/signUp.router"))
 router.use("/v1/api", require("./access/login.router"))
