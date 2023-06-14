@@ -21,7 +21,7 @@ class VideoService {
             body: formData,
         };
 
-        formData.append("ttl", 300);
+        formData.append("ttl", 31622400);
 
         return await fetch(
             `https://dev.vdocipher.com/api/videos/${videoId}/otp`,
@@ -52,6 +52,18 @@ class VideoService {
             .then((data) => data.rows);
     }
 
+    async getVideoApi(videoId) {
+        const options = {
+            method: "GET",
+            headers: {
+                Authorization: `Apisecret ${process.env.VDOCYPHER_API_KEY}`,
+            },
+        };
+        const API_URL = new URL(`https://www.vdocipher.com/api/videos/${videoId}`);
+        return await fetch(API_URL.href, options)
+            .then((res) => res.json())
+    }
+
     async getVideos() {
         const APIvideos = await VideoService.prototype.getAllVideoApi();
         return await Promise.all(
@@ -76,6 +88,31 @@ class VideoService {
                 return video;
             })
         );
+    }
+
+    async getVideo(videoId) {
+        const APIvideo = await VideoService.prototype.getVideoApi(videoId);
+
+        const video = new Video();
+
+        video.author = new Author(
+            "https://papik.pro/en/uploads/posts/2022-06/1655848161_1-papik-pro-p-cool-avatar-pictures-for-guys-1.png"
+        );
+
+        video.video_id = APIvideo.id;
+        video.title = APIvideo.title;
+        video.caption = APIvideo.description;
+        video.sharers = new Array(Math.random);
+        video.hashtags = APIvideo.tags.map((tag) => {
+            return new Hashtag(tag);
+        });
+        video.likers = new Array(Math.random);
+        video.pathVideo = await VideoService.prototype.getPathVideoAPI(
+            videoId
+        );
+            console.log(video);
+        return video
+                
     }
 }
 
