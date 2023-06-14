@@ -21,7 +21,7 @@ class VideoService {
             body: formData,
         };
 
-        formData.append("ttl", 300);
+        formData.append("ttl", 31622400);
 
         return await fetch(
             `https://dev.vdocipher.com/api/videos/${videoId}/otp`,
