@@ -145,7 +145,6 @@ class VideoService {
     }
 
     async getAllVideoShort() {
-
         const folders = await VideoService.prototype.getSubFolderWithFolderId(
             process.env.VDOCYPHER_FOLDER_ID
         );
@@ -176,22 +175,30 @@ class VideoService {
 
     async getVideo(videoId) {
         const APIvideo = await VideoService.prototype.getVideoApi(videoId);
+        if (APIvideo.id) {
+            const video = await VideoService.prototype.convertResponseVideo(
+                APIvideo
+            );
+            const { rows } = await VideoService.prototype.getAllSubVideo(
+                video.video_id
+            );
+            if (rows) {
+                video.video_id_children = await Promise.all(
+                    rows.map(async (itemVideo) => {
+                        const dataVideo =
+                            await VideoService.prototype.convertResponseVideo(
+                                itemVideo
+                            );
+                        dataVideo.parent_id = video.video_id;
+                        return dataVideo;
+                    })
+                );
+            }
 
-        const video = await VideoService.prototype.convertResponseVideo(APIvideo)
-        const { rows } = await VideoService.prototype.getAllSubVideo(
-            video.video_id
-        );
-
-        video.video_id_children = await Promise.all(
-            rows.map(
-                async (itemVideo) =>{
-                    const dataVideo = await VideoService.prototype.convertResponseVideo(itemVideo)
-                    dataVideo.parent_id = video.video_id 
-                    return dataVideo
-                }
-            )
-        );
-        return video;
+            return video;
+        } else {
+            return null;
+        }
     }
 
     async convertResponseVideo(APIvideo) {
