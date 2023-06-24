@@ -1,6 +1,6 @@
 "use strict";
 const { Video, Hashtag, Author } = require("../models/video");
-const {vdocypher} = require('../configs/config.vdocypher')
+const { vdocypher } = require("../configs/config.vdocypher");
 const fetch = require("node-fetch");
 const FormData = require("form-data");
 
