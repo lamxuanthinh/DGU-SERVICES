@@ -1,8 +1,8 @@
 "use strict";
 const { Video, Hashtag, Author } = require("../models/video");
-require("dotenv").config();
+const { vdocypher } = require("../configs/config.vdocypher");
 const fetch = require("node-fetch");
-const FormData = require('form-data');
+const FormData = require("form-data");
 
 class VideoService {
     getCloud() {}
@@ -16,7 +16,7 @@ class VideoService {
             headers: {
                 Accept: "application/json",
                 "Content-Type": "multipart/form-data",
-                Authorization: `Apisecret ${process.env.VDOCYPHER_API_KEY}`,
+                Authorization: `Apisecret ${vdocypher.apiKey}`,
             },
             body: formData,
         };
@@ -39,15 +39,20 @@ class VideoService {
             });
     }
 
-    async getAllVideoApi() {
+    async getAllVideoApi(folderId) {
         const options = {
             method: "GET",
             headers: {
-                Authorization: `Apisecret ${process.env.VDOCYPHER_API_KEY}`,
+                Authorization: `Apisecret ${vdocypher.apiKey}`,
             },
         };
-        const strURL = "https://www.vdocipher.com/api/videos";
-        return await fetch(strURL, options)
+        const URL_VDOCYPHER = new URL("https://www.vdocipher.com/api/videos");
+
+        if (folderId) {
+            URL_VDOCYPHER.searchParams.set("folderId", folderId);
+        }
+
+        return await fetch(URL_VDOCYPHER.href, options)
             .then((res) => res.json())
             .then((data) => data.rows);
     }
@@ -56,43 +61,147 @@ class VideoService {
         const options = {
             method: "GET",
             headers: {
-                Authorization: `Apisecret ${process.env.VDOCYPHER_API_KEY}`,
+                Authorization: `Apisecret ${vdocypher.apiKey}`,
             },
         };
-        const API_URL = new URL(`https://www.vdocipher.com/api/videos/${videoId}`);
-        return await fetch(API_URL.href, options)
-            .then((res) => res.json())
+        const API_URL = new URL(
+            `https://www.vdocipher.com/api/videos/${videoId}`
+        );
+        return await fetch(API_URL.href, options).then((res) => res.json());
     }
 
-    async getVideos() {
-        const APIvideos = await VideoService.prototype.getAllVideoApi();
-        return await Promise.all(
-            APIvideos.map(async (APIvideo) => {
-                const video = new Video();
+    async getSubFolderWithFolderId(folderId) {
+        const URL_VDOCYPHER = new URL(
+            `https://www.vdocipher.com/api/videos/folders/${folderId}`
+        );
 
-                video.author = new Author(
-                    "https://papik.pro/en/uploads/posts/2022-06/1655848161_1-papik-pro-p-cool-avatar-pictures-for-guys-1.png"
-                );
+        const options = {
+            method: "GET",
+            headers: {
+                Authorization: `Apisecret ${vdocypher.apiKey}`,
+            },
+        };
+        const { folderList } = await fetch(URL_VDOCYPHER.href, options).then(
+            (res) => res.json()
+        );
 
-                video.video_id = APIvideo.id;
-                video.title = APIvideo.title;
-                video.caption = APIvideo.description;
-                video.sharers = new Array(Math.random);
-                video.hashtags = APIvideo.tags.map((tag) => {
-                    return new Hashtag(tag);
-                });
-                video.likers = new Array(Math.random);
-                video.pathVideo = await VideoService.prototype.getPathVideoAPI(
-                    video.video_id
+        return folderList.map((folder) => ({
+            folderId: folder.id,
+            parentVideoId: folder.name,
+        }));
+    }
+
+    async getAllParentVideo() {
+        const URL_VDOCYPHER = new URL(
+            `https://www.vdocipher.com/api/videos/folders/${process.env.VDOCYPHER_FOLDER_ID}`
+        );
+
+        const options = {
+            method: "GET",
+            headers: {
+                Authorization: `Apisecret ${vdocypher.apiKey}`,
+            },
+        };
+        const { folderList } = await fetch(URL_VDOCYPHER.href, options).then(
+            (res) => res.json()
+        );
+        console.log("folderList", folderList);
+        return folderList.map((folder) => ({
+            folderId: folder.id,
+            parentVideoId: folder.name,
+        }));
+    }
+
+    async getAllSubVideo(parentVideoId) {
+        const parentVideos = await VideoService.prototype.getAllParentVideo();
+        const parentVideoFound = parentVideos.find(
+            (parentVideo) => parentVideo.parentVideoId === parentVideoId
+        );
+        if (parentVideoFound) {
+            console.log("parentVideoFound", parentVideoFound);
+            return await VideoService.prototype.getVideoWithFolderId(
+                parentVideoFound.folderId
+            );
+        } else {
+            return [];
+        }
+    }
+
+    async getVideoWithFolderId(folderId) {
+        const URL_VDOCYPHER = new URL(`https://www.vdocipher.com/api/videos`);
+
+        URL_VDOCYPHER.searchParams.set("folderId", folderId);
+
+        const options = {
+            method: "GET",
+            headers: {
+                Authorization: `Apisecret ${vdocypher.apiKey}`,
+            },
+        };
+
+        return await fetch(URL_VDOCYPHER.href, options).then((res) =>
+            res.json()
+        );
+    }
+
+    async getAllVideoShort() {
+        const folders = await VideoService.prototype.getSubFolderWithFolderId(
+            vdocypher.folderId
+        );
+
+        const data = await Promise.all(
+            folders.map(async (folder) => {
+                let { rows } =
+                    await VideoService.prototype.getVideoWithFolderId(
+                        folder.folderId
+                    );
+                const videos = await Promise.all(
+                    rows.map(async (video) => {
+                        const dataVideo =
+                            await VideoService.prototype.convertResponseVideo(
+                                video
+                            );
+                        dataVideo.parent_id = folder.parentVideoId;
+                        return dataVideo;
+                    })
                 );
-                return video;
+                return videos;
             })
         );
+        const [videos] = data;
+
+        return await videos;
     }
 
     async getVideo(videoId) {
         const APIvideo = await VideoService.prototype.getVideoApi(videoId);
+        if (APIvideo.id) {
+            const video = await VideoService.prototype.convertResponseVideo(
+                APIvideo
+            );
+            const { rows } = await VideoService.prototype.getAllSubVideo(
+                video.video_id
+            );
+            if (rows) {
+                video.video_id_children = await Promise.all(
+                    rows.map(async (itemVideo) => {
+                        const dataVideo =
+                            await VideoService.prototype.convertResponseVideo(
+                                itemVideo
+                            );
+                        dataVideo.parent_id = video.video_id;
+                        return dataVideo;
+                    })
+                );
+            }
 
+            return video;
+        } else {
+            return null;
+        }
+    }
+
+    async convertResponseVideo(APIvideo) {
         const video = new Video();
 
         video.author = new Author(
@@ -108,11 +217,10 @@ class VideoService {
         });
         video.likers = new Array(Math.random);
         video.pathVideo = await VideoService.prototype.getPathVideoAPI(
-            videoId
+            APIvideo.id
         );
-            console.log(video);
-        return video
-                
+
+        return video;
     }
 }
 
