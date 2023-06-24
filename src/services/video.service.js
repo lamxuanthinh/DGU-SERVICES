@@ -1,6 +1,6 @@
 "use strict";
 const { Video, Hashtag, Author } = require("../models/video");
-require("dotenv").config();
+const {vdocypher} = require('../configs/config.vdocypher')
 const fetch = require("node-fetch");
 const FormData = require("form-data");
 
@@ -16,7 +16,7 @@ class VideoService {
             headers: {
                 Accept: "application/json",
                 "Content-Type": "multipart/form-data",
-                Authorization: `Apisecret ${process.env.VDOCYPHER_API_KEY}`,
+                Authorization: `Apisecret ${vdocypher.apiKey}`,
             },
             body: formData,
         };
@@ -43,7 +43,7 @@ class VideoService {
         const options = {
             method: "GET",
             headers: {
-                Authorization: `Apisecret ${process.env.VDOCYPHER_API_KEY}`,
+                Authorization: `Apisecret ${vdocypher.apiKey}`,
             },
         };
         const URL_VDOCYPHER = new URL("https://www.vdocipher.com/api/videos");
@@ -61,7 +61,7 @@ class VideoService {
         const options = {
             method: "GET",
             headers: {
-                Authorization: `Apisecret ${process.env.VDOCYPHER_API_KEY}`,
+                Authorization: `Apisecret ${vdocypher.apiKey}`,
             },
         };
         const API_URL = new URL(
@@ -78,7 +78,7 @@ class VideoService {
         const options = {
             method: "GET",
             headers: {
-                Authorization: `Apisecret ${process.env.VDOCYPHER_API_KEY}`,
+                Authorization: `Apisecret ${vdocypher.apiKey}`,
             },
         };
         const { folderList } = await fetch(URL_VDOCYPHER.href, options).then(
@@ -99,7 +99,7 @@ class VideoService {
         const options = {
             method: "GET",
             headers: {
-                Authorization: `Apisecret ${process.env.VDOCYPHER_API_KEY}`,
+                Authorization: `Apisecret ${vdocypher.apiKey}`,
             },
         };
         const { folderList } = await fetch(URL_VDOCYPHER.href, options).then(
@@ -135,7 +135,7 @@ class VideoService {
         const options = {
             method: "GET",
             headers: {
-                Authorization: `Apisecret ${process.env.VDOCYPHER_API_KEY}`,
+                Authorization: `Apisecret ${vdocypher.apiKey}`,
             },
         };
 
@@ -146,7 +146,7 @@ class VideoService {
 
     async getAllVideoShort() {
         const folders = await VideoService.prototype.getSubFolderWithFolderId(
-            process.env.VDOCYPHER_FOLDER_ID
+            vdocypher.folderId
         );
 
         const data = await Promise.all(
