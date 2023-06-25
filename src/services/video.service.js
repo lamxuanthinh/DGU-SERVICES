@@ -179,30 +179,32 @@ class VideoService {
         );
         if (videoFound) {
             return videoFound;
-        } else if (APIvideo.id) {
-            APIvideo = await VideoService.prototype.getVideoApi(videoId);
-            const video = await VideoService.prototype.convertResponseVideo(
-                APIvideo
-            );
-            const { rows } = await VideoService.prototype.getAllSubVideo(
-                video.video_id
-            );
-            if (rows) {
-                video.video_id_children = await Promise.all(
-                    rows.map(async (itemVideo) => {
-                        const dataVideo =
-                            await VideoService.prototype.convertResponseVideo(
-                                itemVideo
-                            );
-                        dataVideo.parent_id = video.video_id;
-                        return dataVideo;
-                    })
-                );
-            }
-
-            return video;
         } else {
-            return null;
+            const APIvideo = await VideoService.prototype.getVideoApi(videoId);
+            if (APIvideo.id) {
+                const video = await VideoService.prototype.convertResponseVideo(
+                    APIvideo
+                );
+                const { rows } = await VideoService.prototype.getAllSubVideo(
+                    video.video_id
+                );
+                if (rows) {
+                    video.video_id_children = await Promise.all(
+                        rows.map(async (itemVideo) => {
+                            const dataVideo =
+                                await VideoService.prototype.convertResponseVideo(
+                                    itemVideo
+                                );
+                            dataVideo.parent_id = video.video_id;
+                            return dataVideo;
+                        })
+                    );
+                }
+
+                return video;
+            } else {
+                return null;
+            }
         }
     }
 
