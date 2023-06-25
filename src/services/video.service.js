@@ -105,7 +105,7 @@ class VideoService {
         const { folderList } = await fetch(URL_VDOCYPHER.href, options).then(
             (res) => res.json()
         );
-        console.log("folderList", folderList);
+
         return folderList.map((folder) => ({
             folderId: folder.id,
             parentVideoId: folder.name,
@@ -118,7 +118,6 @@ class VideoService {
             (parentVideo) => parentVideo.parentVideoId === parentVideoId
         );
         if (parentVideoFound) {
-            console.log("parentVideoFound", parentVideoFound);
             return await VideoService.prototype.getVideoWithFolderId(
                 parentVideoFound.folderId
             );
@@ -174,8 +173,14 @@ class VideoService {
     }
 
     async getVideo(videoId) {
-        const APIvideo = await VideoService.prototype.getVideoApi(videoId);
-        if (APIvideo.id) {
+        const shortVideos = await VideoService.prototype.getAllVideoShort();
+        const videoFound = shortVideos.find(
+            (video) => video.video_id === videoId
+        );
+        if (videoFound) {
+            return videoFound;
+        } else if (APIvideo.id) {
+            APIvideo = await VideoService.prototype.getVideoApi(videoId);
             const video = await VideoService.prototype.convertResponseVideo(
                 APIvideo
             );
@@ -219,6 +224,7 @@ class VideoService {
         video.pathVideo = await VideoService.prototype.getPathVideoAPI(
             APIvideo.id
         );
+        video.duration = APIvideo.length;
 
         return video;
     }

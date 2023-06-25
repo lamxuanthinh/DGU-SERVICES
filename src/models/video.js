@@ -12,6 +12,7 @@ function Video() {
     this.likers = [];
     this.video_id_children = [];
     this.parent_id = null;
+    this.duration = null;
 }
 
 function Hashtag(name) {
