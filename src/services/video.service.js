@@ -154,16 +154,26 @@ class VideoService {
                     await VideoService.prototype.getVideoWithFolderId(
                         folder.folderId
                     );
+                rows.sort((a, b) => a.upload_time - b.upload_time);
+                rows.reverse();
                 const videos = await Promise.all(
                     rows.map(async (video) => {
                         const dataVideo =
                             await VideoService.prototype.convertResponseVideo(
                                 video
                             );
+                        dataVideo.break_point;
                         dataVideo.parent_id = folder.parentVideoId;
                         return dataVideo;
                     })
                 );
+
+                let breakPoint = 0;
+                videos.map((video) => {
+                    video.break_point = breakPoint;
+                    breakPoint += video.duration;
+                    return video;
+                });
                 return videos;
             })
         );
@@ -185,19 +195,30 @@ class VideoService {
                 const video = await VideoService.prototype.convertResponseVideo(
                     APIvideo
                 );
-                const { rows } = await VideoService.prototype.getAllSubVideo(
+                let { rows } = await VideoService.prototype.getAllSubVideo(
                     video.video_id
                 );
                 if (rows) {
+                    rows.sort((a, b) => a.upload_time - b.upload_time);
+                    rows.reverse();
+
                     video.video_id_children = await Promise.all(
                         rows.map(async (itemVideo) => {
                             const dataVideo =
                                 await VideoService.prototype.convertResponseVideo(
                                     itemVideo
                                 );
-                            dataVideo.parent_id = video.video_id;
                             return dataVideo;
                         })
+                    );
+                    let breakPoint = 0;
+                    video.video_id_children = video.video_id_children.map(
+                        (subVideo) => {
+                            subVideo.parent_id = video.video_id;
+                            subVideo.break_point = breakPoint;
+                            breakPoint += subVideo.duration;
+                            return subVideo;
+                        }
                     );
                 }
 

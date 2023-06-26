@@ -13,6 +13,7 @@ function Video() {
     this.video_id_children = [];
     this.parent_id = null;
     this.duration = null;
+    this.break_point = null;
 }
 
 function Hashtag(name) {
