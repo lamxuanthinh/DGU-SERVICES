@@ -1,30 +1,30 @@
-require('dotenv').config()
+require("dotenv").config();
 
 const development = {
     app: {
         port: process.env.DEV_APP_PORT || 3000,
-        clientUrl: process.env.CLIENT_URL_DEV || ""
+        clientUrl: process.env.CLIENT_URL_DEV || "",
     },
     db: {
         name: process.env.DEV_DB_NAME || "",
-        userName : process.env.DEV_DB_USERNAME || "" ,
-        password: process.env.DEV_DB_PASSWORD || ""
-    }
-}
+        userName: process.env.DEV_DB_USERNAME || "",
+        password: process.env.DEV_DB_PASSWORD || "",
+    },
+};
 
 const production = {
     app: {
         port: process.env.PRO_APP_PORT || 3000,
-        clientUrl: process.env.CLIENT_URL_PRO || ""
+        clientUrl: process.env.CLIENT_URL_PRO || "",
     },
     db: {
         name: process.env.PRO_DB_NAME || "",
-        userName : process.env.PRO_DB_USERNAME || "",
-        password: process.env.PRO_DB_PASSWORD || ""
-    }
-}
+        userName: process.env.PRO_DB_USERNAME || "",
+        password: process.env.PRO_DB_PASSWORD || "",
+    },
+};
 
-const config = {development, production}
-const env = process.env.NODE_ENV || "development"
+const config = { development, production };
+const env = process.env.NODE_ENV || "development";
 
-module.exports = config[env]
+module.exports = config[env];
