@@ -1,0 +1,31 @@
+version: "3"
+services:
+  nginx:
+    ports:
+      - "8080:80"
+      
+  node-app:
+    build:
+      context: .
+      args:
+        NODE_ENV: development 
+    volumes:
+      - ./:/app
+      - /app/node_modules
+    environment:
+      - NODE_ENV=development
+      - DEV_APP_PORT=5005
+      - DEV_DB_USERNAME=root
+      - DEV_DB_PASSWORD=123
+      - DEV_DB_IP=mongo
+      - DEV_DB_PORT=27017
+      - DEV_DB_NAME=DGU
+      - CLIENT_URL_DEV=http://localhost:3000
+      - VDOCYPHER_FOLDER_ID=e9563e4b64724d38aff8ecc8a5023657
+      - VDOCYPHER_API_KEY=IjFKdCZ2Okofg8lpUI08t2Wui81xKK8eaJobkpOeTLlGdlPsswtB3Lly4wfeY6ya
+    command: npm run dev
+
+#  mongo:
+#    environment:
+#      MONGO_INITDB_ROOT_USERNAME: root
+#      MONGO_INITDB_ROOT_PASSWORD: example

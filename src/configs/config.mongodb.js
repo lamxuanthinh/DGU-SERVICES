@@ -6,9 +6,11 @@ const development = {
         clientUrl: process.env.CLIENT_URL_DEV || "",
     },
     db: {
-        name: process.env.DEV_DB_NAME || "",
+        databaseName: process.env.DEV_DB_NAME || "",
         userName: process.env.DEV_DB_USERNAME || "",
         password: process.env.DEV_DB_PASSWORD || "",
+        port: process.env.DEV_DB_PORT || 27017,
+        ip: process.env.DEV_DB_IP || "",
     },
 };
 
@@ -18,9 +20,11 @@ const production = {
         clientUrl: process.env.CLIENT_URL_PRO || "",
     },
     db: {
-        name: process.env.PRO_DB_NAME || "",
+        databaseName: process.env.PRO_DB_NAME || "",
         userName: process.env.PRO_DB_USERNAME || "",
         password: process.env.PRO_DB_PASSWORD || "",
+        port: process.env.PRO_DB_PORT || 27017,
+        ip: process.env.PRO_DB_IP || "",
     },
 };
 

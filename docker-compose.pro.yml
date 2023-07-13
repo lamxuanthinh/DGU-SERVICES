@@ -1,0 +1,21 @@
+version: "3"
+services:
+  nginx:
+    ports:
+      - "80:80"
+  node-app:
+    build:
+      context: .
+      args:
+        NODE_ENV: production
+    environment:
+      - NODE_ENV=production
+      - PRO_APP_PORT=5005
+      - PRO_DB_USERNAME=root
+      - PRO_DB_PASSWORD=123
+      - PRO_DB_IP=mongo
+      - PRO_DB_PORT=27017
+      - PRO_DB_NAME=DGU
+      - CLIENT_URL_PRO=https://dgu-git-develop-lamxuanthinh.vercel.app
+      - VDOCYPHER_FOLDER_ID=e9563e4b64724d38aff8ecc8a5023657
+      - VDOCYPHER_API_KEY=IjFKdCZ2Okofg8lpUI08t2Wui81xKK8eaJobkpOeTLlGdlPsswtB3Lly4wfeY6ya
