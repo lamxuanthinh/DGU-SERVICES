@@ -1,0 +1,21 @@
+version: "3"
+services:
+  nginx:
+    ports:
+      - "80:80"
+  node-app:
+    build:
+      context: .
+      args:
+        NODE_ENV: production
+    environment:
+      - NODE_ENV=production
+      - PRO_APP_PORT=5005
+      - PRO_DB_USERNAME=${PRO_DB_USERNAME}
+      - PRO_DB_PASSWORD=${PRO_DB_PASSWORD}
+      - PRO_DB_IP=mongo
+      - PRO_DB_PORT=27017
+      - PRO_DB_NAME=${PRO_DB_NAME}
+      - CLIENT_URL_PRO=${CLIENT_URL_PRO}
+      - VDOCYPHER_FOLDER_ID=${VDOCYPHER_FOLDER_ID}
+      - VDOCYPHER_API_KEY=${VDOCYPHER_API_KEY}

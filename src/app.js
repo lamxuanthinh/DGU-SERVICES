@@ -11,6 +11,7 @@ const {
 } = require("./configs/config.mongodb");
 
 // Initialize Middleware
+// app.use("trust proxy");
 app.use(
     cors({
         origin: clientUrl,
@@ -33,7 +34,7 @@ app.use("/", require("./routes/index"));
 // Handing Error
 app.use((req, res, next) => {
     return res.status(404).json({
-        message: "NOT FOUND",
+        message: "NOT FOUND DEV",
     });
 });
 
